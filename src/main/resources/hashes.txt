@@ -1,0 +1,3 @@
+Input String: Nikita-PC~voron~-~Mon Mar 25 17:28:40 MSK 2024~-
+SHA-256 Hash: ee00bf1ddac9cb68d93f4ddf9f4d5653c4f699e0ecedef3e0ba8761a58e88433
+
