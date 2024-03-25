@@ -13,7 +13,11 @@ public class App {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainFrame().setVisible(true);
+                try {
+                    new MainFrame().setVisible(true);
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
