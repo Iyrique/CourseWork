@@ -35,6 +35,7 @@ public class MainFrame extends JFrame {
                 String additionalInfo = addInfoField.getText();
                 String fullInfo = GetterSystemInfo.concatenator(compName, userName, email, additionalInfo);
                 System.out.println(fullInfo);
+                System.out.println(HashGenerator.starter(fullInfo));
             }
         });
     }

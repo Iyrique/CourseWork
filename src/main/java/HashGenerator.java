@@ -1,9 +1,6 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class HashGenerator {
 
@@ -44,20 +41,27 @@ public class HashGenerator {
         return false;
     }
 
-    public static void saveToTxtFile(String inputString, String hashedString) {
-        if (!isDuplicate(inputString, hashedString)) {
-            try (FileWriter writer = new FileWriter(HASHES_FILE_PATH, true)) {
-                writer.write("Input String: " + inputString + "\n");
-                writer.write("SHA-256 Hash: " + hashedString + "\n\n");
-            } catch (IOException e) {
-                e.printStackTrace();
+    private static void saveToTxtFile(String inputString, String hashedString) {
+        try {
+            File file = new File(HASHES_FILE_PATH);
+            if (!file.exists()) {
+                file.createNewFile();
             }
+            if (!isDuplicate(inputString, hashedString)) {
+                try (FileWriter writer = new FileWriter(file, true)) {
+                    writer.write("Input String: " + inputString + "\n");
+                    writer.write("SHA-256 Hash: " + hashedString + "\n\n");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    public static void starter(String input) {
+    public static String starter(String input) {
         String hashedString = generateHash(input);
         saveToTxtFile(input, hashedString);
         System.out.println("Hash generated and saved to hashes.txt.");
+        return hashedString;
     }
 }
