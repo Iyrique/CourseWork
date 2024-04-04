@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.net.UnknownHostException;
 
 public class MainFrame extends JFrame {
@@ -23,6 +24,8 @@ public class MainFrame extends JFrame {
     private JButton chooseSaveFileButton;
     private JTextField resultField;
     private JPanel filePanel;
+    private JButton checkerButton;
+    private JTextArea fingerprintPrinterArea;
 
     public MainFrame() throws UnknownHostException {
         this.setTitle("Fingerprint");
@@ -47,8 +50,9 @@ public class MainFrame extends JFrame {
                         String fullInfo = GetterSystemInfo.concatenator(compName, userName, email, additionalInfo);
                         System.out.println(fullInfo);
                         System.out.println(HashGenerator.starter(fullInfo));
+
                     }
-                } catch (IllegalArgumentException ex) {
+                } catch (IOException ex) {
                     JOptionPane.showConfirmDialog(null, ex.getMessage(), "Ошибка", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -57,7 +61,7 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Выберите файл");
+                fileChooser.setDialogTitle("Выберите файл для чтения или проверки");
                 fileChooser.changeToParentDirectory();
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -88,6 +92,12 @@ public class MainFrame extends JFrame {
                 }
             }
         });
+        checkerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     private void initComponents() throws UnknownHostException {
@@ -102,6 +112,8 @@ public class MainFrame extends JFrame {
         this.addInfoField.setText(DEFAULT_ADD_INFO);
         fileField.setText(DEFAULT_FILE);
         resultField.setText(DEFAULT_FILE);
+        fingerprintPrinterArea.setText("");
+        fingerprintPrinterArea.setEditable(false);
     }
 
     private void centerWindow() {

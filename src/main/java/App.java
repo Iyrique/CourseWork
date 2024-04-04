@@ -8,7 +8,7 @@ public class App {
         printer();
     }
 
-    public static void winMain() throws Exception {
+    private static void winMain() throws Exception {
         Locale.setDefault(Locale.ROOT);
 
         java.awt.EventQueue.invokeLater(new Runnable() {

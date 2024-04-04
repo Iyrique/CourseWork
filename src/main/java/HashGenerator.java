@@ -4,7 +4,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class HashGenerator {
 
-    private static final String HASHES_FILE_PATH = "src/main/resources/hashes.txt";
+    private static final String HASHES_FILE_PATH = "src/main/resources/hash.txt";
 
     private static String generateHash(String input) {
         try {
