@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.List;
 
 public class MainFrame extends JFrame {
 
@@ -42,7 +43,12 @@ public class MainFrame extends JFrame {
                 try {
                     if (checkerFile()) {
                         File fileInput = WorkerFile.getFile(fileField.getText());
-                        File fileOutput = WorkerFile.getFile(resultField.getText());
+                        File fileOutput;
+                        try {
+                            fileOutput = WorkerFile.getFile(resultField.getText());
+                        } catch (IOException ex) {
+                            fileOutput = WorkerFile.createFileCopy(fileField.getText(), resultField.getText());
+                        }
                         String compName = compNameField.getText();
                         String userName = userNameField.getText();
                         String email = emailField.getText();
@@ -72,9 +78,7 @@ public class MainFrame extends JFrame {
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
                     fileField.setText(selectedFile.toString());
-                    if (resultField.getText().equals(DEFAULT_FILE)) {
-                        resultField.setText(selectedFile.toString());
-                    }
+                    resultField.setText(selectedFile.toString());
                 }
             }
         });
@@ -103,7 +107,17 @@ public class MainFrame extends JFrame {
                 try {
                     if (checkerFile()) {
                         File fileInput = WorkerFile.getFile(fileField.getText());
-                        MetadataWorker.extractor(fileInput.getAbsolutePath());
+                        List<String> lst = MetadataWorker.extractor(fileInput.getAbsolutePath());
+                        StringBuilder text = new StringBuilder();
+                        if (!lst.isEmpty()) {
+                            for (String el: lst) {
+                                text.append(el);
+                                text.append("\n");
+                            }
+                        } else {
+                            text = new StringBuilder("Fingerprint не найден!");
+                        }
+                        fingerprintPrinterArea.setText(text.toString());
                     }
                 } catch (IOException ex) {
                     JOptionPane.showConfirmDialog(null, ex.getMessage(), "Ошибка", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);

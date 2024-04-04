@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class WorkerFile {
@@ -19,8 +21,17 @@ public class WorkerFile {
         File fileRes = new File(fileResult);
         if (!fileRes.exists()) {
             fileRes.createNewFile();
-            fileRes = fileOr;
         }
+        FileInputStream inputStream = new FileInputStream(fileOr);
+        FileOutputStream outputStream = new FileOutputStream(fileRes);
+        byte[] buffer = new byte[(int) fileOr.length()];
+        int length;
+        while ((length = inputStream.read(buffer)) > 0) {
+            outputStream.write(buffer, 0, length);
+        }
+        inputStream.close();
+        outputStream.close();
+        System.out.println("Файл успешно скопирован.");
         return fileRes;
     }
 }

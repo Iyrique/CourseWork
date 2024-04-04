@@ -3,12 +3,12 @@ import java.util.Locale;
 
 public class App {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         winMain();
         printer();
     }
 
-    private static void winMain() throws Exception {
+    private static void winMain(){
         Locale.setDefault(Locale.ROOT);
 
         java.awt.EventQueue.invokeLater(new Runnable() {
