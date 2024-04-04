@@ -13,4 +13,14 @@ public class WorkerFile {
         }
         return file;
     }
+
+    public static File createFileCopy(String fileOrigin, String fileResult) throws IOException {
+        File fileOr = getFile(fileOrigin);
+        File fileRes = new File(fileResult);
+        if (!fileRes.exists()) {
+            fileRes.createNewFile();
+            fileRes = fileOr;
+        }
+        return fileRes;
+    }
 }

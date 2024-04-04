@@ -32,7 +32,7 @@ public class MainFrame extends JFrame {
         this.setContentPane(panelMain);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
-        this.setSize(600, 500);
+        this.setSize(600, 600);
         initComponents();
         centerWindow();
         this.generatorButton.setSize(30, 10);
@@ -49,8 +49,13 @@ public class MainFrame extends JFrame {
                         String additionalInfo = addInfoField.getText();
                         String fullInfo = GetterSystemInfo.concatenator(compName, userName, email, additionalInfo);
                         System.out.println(fullInfo);
-                        System.out.println(HashGenerator.starter(fullInfo));
-
+                        String hash = HashGenerator.starter(fullInfo);
+                        System.out.println(hash);
+                        if (!fileOutput.equals(fileInput)) {
+                            fileOutput = WorkerFile.createFileCopy(fileInput.getAbsolutePath(),
+                                    fileOutput.getAbsolutePath());
+                        }
+                        MetadataWorker.hider(fileOutput.getAbsolutePath(), hash);
                     }
                 } catch (IOException ex) {
                     JOptionPane.showConfirmDialog(null, ex.getMessage(), "Ошибка", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
@@ -95,7 +100,14 @@ public class MainFrame extends JFrame {
         checkerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                try {
+                    if (checkerFile()) {
+                        File fileInput = WorkerFile.getFile(fileField.getText());
+                        MetadataWorker.extractor(fileInput.getAbsolutePath());
+                    }
+                } catch (IOException ex) {
+                    JOptionPane.showConfirmDialog(null, ex.getMessage(), "Ошибка", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }
@@ -123,12 +135,12 @@ public class MainFrame extends JFrame {
         this.setLocation(centerX, centerY);
     }
 
-    private boolean checkerFile() {
+    private boolean checkerFile() throws IOException {
         if (fileField.getText().equals(DEFAULT_FILE) || resultField.getText().equals(DEFAULT_FILE)) {
-            throw new IllegalArgumentException("File doesn't exist");
+            throw new IOException("File doesn't exist");
         }
         if (fileField.getText().isEmpty() || resultField.getText().isEmpty()) {
-            throw new IllegalArgumentException("File path cannot empty");
+            throw new IOException("File path cannot empty");
         }
         return true;
     }

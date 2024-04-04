@@ -35,6 +35,7 @@ public class MetadataWorker {
         UserDefinedFileAttributeView userView = Files.getFileAttributeView(filePath, UserDefinedFileAttributeView.class);
         userView.write(ATTRIBUTE_NAME, ByteBuffer.wrap(value.getBytes()));
         view.setTimes(attributes.lastModifiedTime(), currentTime, null);
+        System.out.println("Success");
     }
 
     public static List<String> extractor(String pathFile) throws IOException {
