@@ -1,3 +1,10 @@
+package fingerprint.view;
+
+import fingerprint.utils.MetadataWorker;
+import fingerprint.utils.GetterSystemInfo;
+import fingerprint.utils.HashGenerator;
+import fingerprint.utils.WorkerFile;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,6 +19,8 @@ public class MainFrame extends JFrame {
     public static final String DEFAULT_STRING_EMAIL = "Enter your email here!";
     public static final String DEFAULT_ADD_INFO = "Enter additional information here!";
     public static final String DEFAULT_FILE = "No file!(";
+    public static final String DEFAULT_FINGERPRINT = "Fingerprint не найден!";
+    private static final String HASHES_FILE_PATH = "src/main/resources/hash.txt";
 
     private JPanel panelMain;
     private JPanel infoPanel;
@@ -27,16 +36,18 @@ public class MainFrame extends JFrame {
     private JPanel filePanel;
     private JButton checkerButton;
     private JTextArea fingerprintPrinterArea;
+    private JButton checkHashButton;
+    private JTextField hashFileField;
+    private JButton changeHashFileButton;
 
     public MainFrame() throws UnknownHostException {
         this.setTitle("Fingerprint");
         this.setContentPane(panelMain);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
-        this.setSize(600, 600);
+        this.setSize(600, 900);
         initComponents();
         centerWindow();
-        this.generatorButton.setSize(30, 10);
         generatorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -55,7 +66,7 @@ public class MainFrame extends JFrame {
                         String additionalInfo = addInfoField.getText();
                         String fullInfo = GetterSystemInfo.concatenator(compName, userName, email, additionalInfo);
                         System.out.println(fullInfo);
-                        String hash = HashGenerator.starter(fullInfo);
+                        String hash = HashGenerator.starter(fullInfo, hashFileField.getText());
                         System.out.println(hash);
                         if (!fileOutput.equals(fileInput)) {
                             fileOutput = WorkerFile.createFileCopy(fileInput.getAbsolutePath(),
@@ -115,12 +126,51 @@ public class MainFrame extends JFrame {
                                 text.append("\n");
                             }
                         } else {
-                            text = new StringBuilder("Fingerprint не найден!");
+                            text = new StringBuilder(DEFAULT_FINGERPRINT);
                         }
                         fingerprintPrinterArea.setText(text.toString());
                     }
                 } catch (IOException ex) {
                     JOptionPane.showConfirmDialog(null, ex.getMessage(), "Ошибка", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        changeHashFileButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Выберите файл c хэшами");
+                if (hashFileField.getText().isEmpty()) {
+                    fileChooser.changeToParentDirectory();
+                } else {
+                    fileChooser.setCurrentDirectory(new File(hashFileField.getText()));
+                }
+                int returnValue = fileChooser.showOpenDialog(null);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    hashFileField.setText(selectedFile.toString());
+                }
+            }
+        });
+        checkHashButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String text = fingerprintPrinterArea.getText();
+                if (!text.contains(DEFAULT_FINGERPRINT)) {
+                    String[] textArr = text.split(": ");
+                    try {
+                        String hash = textArr[1].trim();
+                        String concInfo = HashGenerator.getInfo(hash, hashFileField.getText());
+                        text += "\n";
+                        if (concInfo != null) {
+                            text += GetterSystemInfo.parserInfo(concInfo);
+                            fingerprintPrinterArea.setText(text);
+                        }
+                    } catch (IOException ex) {
+                        JOptionPane.showConfirmDialog(null, ex.getMessage(), "Ошибка", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showConfirmDialog(null, DEFAULT_FINGERPRINT, "Ошибка", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -138,8 +188,9 @@ public class MainFrame extends JFrame {
         this.addInfoField.setText(DEFAULT_ADD_INFO);
         fileField.setText(DEFAULT_FILE);
         resultField.setText(DEFAULT_FILE);
-        fingerprintPrinterArea.setText("");
+        fingerprintPrinterArea.setText(DEFAULT_FINGERPRINT);
         fingerprintPrinterArea.setEditable(false);
+        hashFileField.setText(HASHES_FILE_PATH);
     }
 
     private void centerWindow() {

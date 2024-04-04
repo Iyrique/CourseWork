@@ -1,10 +1,10 @@
+package fingerprint.utils;
+
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class HashGenerator {
-
-    private static final String HASHES_FILE_PATH = "src/main/resources/hash.txt";
 
     private static String generateHash(String input) {
         try {
@@ -27,7 +27,7 @@ public class HashGenerator {
         }
     }
 
-    private static boolean isDuplicate(String inputString, String hashedString) {
+    private static boolean isDuplicate(String inputString, String hashedString, String HASHES_FILE_PATH) {
         try (BufferedReader reader = new BufferedReader(new FileReader(HASHES_FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -41,13 +41,13 @@ public class HashGenerator {
         return false;
     }
 
-    private static void saveToTxtFile(String inputString, String hashedString) {
+    private static void saveToTxtFile(String inputString, String hashedString, String HASHES_FILE_PATH) {
         try {
             File file = new File(HASHES_FILE_PATH);
             if (!file.exists()) {
                 file.createNewFile();
             }
-            if (!isDuplicate(inputString, hashedString)) {
+            if (!isDuplicate(inputString, hashedString, HASHES_FILE_PATH)) {
                 try (FileWriter writer = new FileWriter(file, true)) {
                     writer.write("Input String: " + inputString + "\n");
                     writer.write("SHA-256 Hash: " + hashedString + "\n\n");
@@ -58,10 +58,23 @@ public class HashGenerator {
         }
     }
 
-    public static String starter(String input) {
+    public static String starter(String input, String HASHES_FILE_PATH) {
         String hashedString = generateHash(input);
-        saveToTxtFile(input, hashedString);
-        System.out.println("Hash generated and saved to hashes.txt.");
+        saveToTxtFile(input, hashedString, HASHES_FILE_PATH);
+        System.out.println("Hash generated and saved to file.");
         return hashedString;
+    }
+
+    public static String getInfo(String hash, String HASHES_FILE_PATH) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(HASHES_FILE_PATH));
+        String line;
+        String oldLine = reader.readLine();
+        while ((line = reader.readLine()) != null) {
+            if (line.contains(hash)) {
+                return oldLine;
+            }
+            oldLine = line;
+        }
+        return null;
     }
 }

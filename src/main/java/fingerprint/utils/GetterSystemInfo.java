@@ -1,8 +1,14 @@
+package fingerprint.utils;
+
+import fingerprint.view.MainFrame;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
 
 public class GetterSystemInfo {
+
+    private static String INPUT_STRING = "Input String: ";
 
     public static String getComputerName() throws UnknownHostException {
         return InetAddress.getLocalHost().getHostName();
@@ -38,6 +44,29 @@ public class GetterSystemInfo {
             additionalInfo = "-";
         }
         return compName + "~" + userName + "~" + email + "~" + getCurrentDate() + "~" + additionalInfo;
+    }
+
+    public static String parserInfo(String str) {
+        if (str.contains(INPUT_STRING)) {
+            str = str.replaceAll(INPUT_STRING, "");
+        }
+        StringBuilder sb = new StringBuilder();
+        String[] strArray = str.split("~");
+        sb.append("Computer name: ");
+        sb.append(strArray[0]);
+        sb.append("\n");
+        sb.append("Username: ");
+        sb.append(strArray[1]);
+        sb.append("\n");
+        sb.append("email: ");
+        sb.append(strArray[2]);
+        sb.append("\n");
+        sb.append("Date: ");
+        sb.append(strArray[3]);
+        sb.append("\n");
+        sb.append("Additional info: ");
+        sb.append(strArray[4]);
+        return sb.toString();
     }
 
 }

@@ -1,3 +1,8 @@
+package fingerprint;
+
+import fingerprint.utils.GetterSystemInfo;
+import fingerprint.view.MainFrame;
+
 import java.net.UnknownHostException;
 import java.util.Locale;
 

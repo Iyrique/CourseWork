@@ -1,3 +1,5 @@
+package fingerprint.utils;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -35,7 +37,7 @@ public class MetadataWorker {
             byte[] value = new byte[size];
             view.read(attributeName, ByteBuffer.wrap(value));
             if (attributeName.contains(ATTRIBUTE_NAME)) {
-                ans.add(attributeName + " " + new String(value));
+                ans.add(attributeName + ": " + new String(value));
             }
         }
         return ans;
