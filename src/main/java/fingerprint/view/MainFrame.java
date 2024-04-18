@@ -73,6 +73,8 @@ public class MainFrame extends JFrame {
                                     fileOutput.getAbsolutePath());
                         }
                         MetadataWorker.hider(fileOutput.getAbsolutePath(), hash);
+                        JOptionPane.showConfirmDialog(null, "Fingerprint встроен успешно!",
+                                "Успешно!",JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
                     }
                 } catch (IOException ex) {
                     JOptionPane.showConfirmDialog(null, ex.getMessage(), "Ошибка", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
@@ -165,6 +167,8 @@ public class MainFrame extends JFrame {
                         if (concInfo != null) {
                             text += GetterSystemInfo.parserInfo(concInfo);
                             fingerprintPrinterArea.setText(text);
+                        } else {
+                            fingerprintPrinterArea.setText("Данного хэш-токена в файле не существует!");
                         }
                     } catch (IOException ex) {
                         JOptionPane.showConfirmDialog(null, ex.getMessage(), "Ошибка", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
