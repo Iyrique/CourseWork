@@ -70,3 +70,6 @@ SHA-256. Этот алгоритм позволяет сделать длину 
 4. Если отпечаток обнаружен, то можно выполнить проверку на совпадение в файле с хэшами, нажав на одноименную кнопку.
    
    ![result.png](info/result.png)
+
+## License
+This project is licensed under the [MIT License](https://opensource.org/license/MIT). Feel free to modify and distribute it for your own purposes.
